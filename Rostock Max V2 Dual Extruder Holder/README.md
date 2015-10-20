@@ -4,6 +4,8 @@ It reroutes both filament paths through the center hole, with an integrated wire
 
 It uses existing top plate holes that would normally be used for extruder holders and angles both bowden tubes away from the towers to avoid catching the tubes on the carriages. The extruders are offset so that the two paths followed by the filament are symmetric.
 
+All screws are 6-32.
+
 These files contain optional settings, such as manual rafts and anchors to help print successfully.
 
 Rendered objects and images are posted on Thingiverse at: http://www.thingiverse.com/thing:1081842 
