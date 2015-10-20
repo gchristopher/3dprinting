@@ -1,2 +1,4 @@
 # 3dprinting
-3d Printing-Related Projects
+
+This is a collection of 3d printing-related projects.
+
