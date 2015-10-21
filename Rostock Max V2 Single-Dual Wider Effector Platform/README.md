@@ -13,3 +13,5 @@ The screws securing the rod to the effector platform are 4-40.
 The upright screws connecting the effector platform are 6-32. 
 
 Rendered objects and images are posted on Thingiverse at: http://www.thingiverse.com/thing:1083270
+
+The stl used for the pictured preview of the E3D V6 hotend is from: http://www.thingiverse.com/thing:341689
