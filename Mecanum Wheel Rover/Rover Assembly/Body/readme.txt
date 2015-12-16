@@ -1,0 +1,1 @@
+This is the body frame with integral holders for small gearmotors, and spacers to hold the electronics and wiring above the battery. 
