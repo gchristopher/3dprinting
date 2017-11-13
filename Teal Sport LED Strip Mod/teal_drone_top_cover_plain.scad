@@ -127,7 +127,6 @@ module case_inner_volume() {
         import("teal_top_cover_outline.dxf");
         
         // Remove the edges of the interior area to limit overhang angles.
-        // ggg TODO: Revise this to stay concave without any annoying jags. Probably just extend from the scaled top to +infinity would work.
         translate([0, 0, mounting_bracket_lip_h - slop])
         linear_extrude(height = mounting_bracket_h - mounting_bracket_lip_h + 2*slop, scale = mounting_bracket_slope_scale)
         offset(r = -mounting_bracket_outer_thickness)
