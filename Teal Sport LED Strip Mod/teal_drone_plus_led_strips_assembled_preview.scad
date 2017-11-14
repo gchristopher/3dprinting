@@ -103,8 +103,20 @@ module teal_preview_estimate() {
       cylinder(r = 4, h = 6);
   
       color(body_color)
-      translate([x, y, -teal_sport_body_height*2/3])
-      cylinder(r = 30/2, h = teal_sport_body_height*2/3);
+      translate([x, y, -teal_sport_body_height*2/3]) {
+        cylinder(r = 30/2, h = teal_sport_body_height*2/3);
+        difference() {
+          translate([0, 0, -22 + slop]) {
+            cylinder(r1 = 5, r2 = 15, h = 22);
+            sphere(r = 5, $fn = 30);
+          }
+          translate([0, 0, -24])
+          rotate_extrude()
+          translate([17, 0, 0])
+          scale([0.5, 1, 1])
+          circle(r = 24, $fn = 30);
+        }
+      }
       
       color(body_color)
       translate([x, y, -teal_sport_body_height*2/3])
