@@ -10,7 +10,7 @@
 
 // Module summary:
 //
-// module led_strip_holder_bracket() : A bracket with tilt adjustment to mount the LED strip to the side of the drone.
+// led_strip_holder_bracket() : A bracket with tilt adjustment to mount the LED strip to the side of the drone.
 //
 // The bottom of this bracket is pretty blocky to make it easy to print. 
 //

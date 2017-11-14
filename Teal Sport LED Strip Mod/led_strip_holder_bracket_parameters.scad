@@ -1,13 +1,16 @@
 // led_strip_holder_bracket_parameters.scad
-
-
+//
+// Driving parameters for led_strip_holder_bracket.scad
+//
+// By Gregg Christopher, 2017
+// This file is released under the Creative Commons - Attribution license. 
+// http://creativecommons.org/licenses/by/3.0/
 
 // This file depends on values in curvy_led_strip_holder_parameters.scad.
 // Include that file first.
 
 // Mounting Bracket Height: The case shape should not have any severe overhangs below this height. 
 mounting_bracket_h = 5.5; 
-
 
 // Minimum and maximum angle for slide arm holder.
 tilt_bracket_min_theta = -10;
