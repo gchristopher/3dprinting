@@ -13,7 +13,7 @@
 
 // Module summary:
 
-// module curvy_led_strip_holder(preview_leds = true, manually_generate_supports = true)
+// curvy_led_strip_holder(preview_leds = true, manually_generate_supports = true)
 //     preview_leds: Draw a (commented out, purely cosmetic, glitchy) rendering of the led strip and LEDs.
 //     manually_generate_supports: Does what it says.
 
