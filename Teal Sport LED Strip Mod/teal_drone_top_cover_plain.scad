@@ -12,24 +12,18 @@
 // This file is released under the Creative Commons - Attribution license. 
 // http://creativecommons.org/licenses/by/3.0/
 
+// Module summary:
+// 
+// case_outer_volume() : Exterior dimensions of the plain case.
+// case_inner_volume() : Cutout for the interior space of the plain case.
+// case_clip_fittings() : Mounting brackets and supports for mating to the drone body.
+// case_mounting_clip_holes() : Cutout for the holes in the mounting bracket.
+// teal_cover_plain() : A complete plain case assembled from those four volumes.
+
 // Infinitesimal value for ensuring manifold shapes and other special uses. 
 slop = 0.01;
 
-// Mounting Bracket Height: The case shape should not have any severe overhangs below this height. 
-mounting_bracket_h = 5.5; 
-// Mounting Bracket Lip Height: Force an exact match to the Teal Sport drone shape up to this height.
-mounting_bracket_lip_h = 0.5;
-// Mounting Bracket Slope Scale: Used to determine the overhang slope in the bracket portion of the top case.
-//mounting_bracket_slope_scale = 0.85;
-mounting_bracket_slope_scale = 0.9;
-mounting_bracket_inner_slop_distance = 3;
-// Mounting Bracket Outer Thickness: The bracket will be this thick at the base.
-mounting_bracket_outer_thickness = 4;
-// Case Top Thickness: How thick the case should be at a horizontal point. This should be the thinnest part of the case.
-case_top_thickness = 2;
-
-mounting_clip_inner_r = 2.5;
-mounting_clipe_outer_r = 4;
+include <teal_drone_top_cover_plain_parameters.scad>
 
 // Use a few spheroids to get close to the shape of the bulging ends
 // of the plain Teal Drone top cover. This volume can be tweaked to
@@ -98,7 +92,6 @@ module case_outer_volume() {
 }
 
 module case_inner_volume() {
-  
   // Exact thickness bottom lip guarantees correct mating with the drone.
   translate([0, 0, -slop])
   linear_extrude(height = mounting_bracket_lip_h + 2*slop)
@@ -123,7 +116,6 @@ module case_inner_volume() {
       difference() {
         translate([0, 0, mounting_bracket_lip_h])
         linear_extrude(height = mounting_bracket_h - mounting_bracket_lip_h + 10)
-        //offset(r = -mounting_bracket_outer_thickness)
         import("teal_top_cover_outline.dxf");
         
         // Remove the edges of the interior area to limit overhang angles.
@@ -148,18 +140,9 @@ module case_inner_volume() {
 }
 
 module case_mounting_clip_holes() {
-  for(x = [37.49, -37.49]) {
-    for(y = [56.15, -56.15]) {
-      translate([x, y, -slop])
-      cylinder(r = mounting_clip_inner_r, h = mounting_bracket_h + 2*slop, $fn = 20);
-    }
-  }
-  
-  for(x = [45.99, -45.99]) {
-    for(y = [41.43, -41.43]) {
-      translate([x, y, -slop])
-      cylinder(r = mounting_clip_inner_r, h = mounting_bracket_h + 2*slop, $fn = 20);
-    }
+  for(pos = mounting_clip_hole_positions) {
+    translate([pos[0], pos[1], -slop])
+    cylinder(r = mounting_clip_inner_r, h = mounting_bracket_h + 2*slop, $fn = 20);
   }
 }
 
@@ -167,42 +150,20 @@ module case_clip_fittings() {
   difference() {
     union() {
       // Mounting clip outer sections
-      for(x = [37.49, -37.49]) {
-        for(y = [56.15, -56.15]) {
-          translate([x, y, 0])
-          cylinder(r = mounting_clipe_outer_r, h = mounting_bracket_h, $fn = 20);
-        }
+      for(pos = mounting_clip_hole_positions) {
+        translate([pos[0], pos[1], 0])
+        cylinder(r = mounting_clip_outer_r, h = mounting_bracket_h, $fn = 20);
       }
-      
-      for(x = [45.99, -45.99]) {
-        for(y = [41.43, -41.43]) {
-          translate([x, y, 0])
-         cylinder(r = mounting_clipe_outer_r, h = mounting_bracket_h, $fn = 20);
-        }
-      }  
+
       // Brace sections
       intersection() {
         case_outer_volume();
-        union() {
-          for(x = [37.49, -37.49]) {
-            for(y = [56.15, -56.15]) {
-              translate([x, y, -slop])
-              for(rot = [atan2(-x, y/2) + 30, atan2(-x, y/2) - 30])
-              rotate([0, 0, rot])
-              translate([-mounting_bracket_outer_thickness/4, 0, 0])
-              cube([mounting_bracket_outer_thickness/2, 20, mounting_bracket_h]);
-            }
-          }
-          
-          for(x = [45.99, -45.99]) {
-            for(y = [41.43, -41.43]) {
-              translate([x, y, -slop])
-              for(rot = [atan2(-x, y/2) + 30, atan2(-x, y/2) - 30])
-              rotate([0, 0, rot])
-              translate([-mounting_bracket_outer_thickness/4, 0, 0])
-              cube([mounting_bracket_outer_thickness/2, 20, mounting_bracket_h]);
-            }
-          }
+        for(pos = mounting_clip_hole_positions) {
+          translate([pos[0], pos[1], -slop])
+          for(rot = [atan2(-pos[0], pos[1]/2) + 30, atan2(-pos[0], pos[1]/2) - 30])
+          rotate([0, 0, rot])
+          translate([-mounting_bracket_outer_thickness/4, 0, 0])
+          cube([mounting_bracket_outer_thickness/2, 20, mounting_bracket_h]);
         }
       }
     }
