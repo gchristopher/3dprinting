@@ -42,11 +42,13 @@ rotate([led_strip_tilt, 0, 0]) {
   curvy_led_strip_holder(true, false);
   
   // Side mounting brackets.
-  color([0.5, 0.5, 0.2])
+  color([0.5, 0.8, 0.2])
+  //color(preview_color)
   translate([-bracket_distance_from_teal_body - base_post_notch_w - bracket_angle_arm_slot_thickness - bracket_inner_thickness, 0, -teal_sport_body_height/2])
   led_strip_holder_bracket();
 
-  color([0.5, 0.5, 0.2])
+  color([0.5, 0.8, 0.2])
+  //color(preview_color)
   mirror([1, 0, 0])
   translate([-bracket_distance_from_teal_body - base_post_notch_w - bracket_angle_arm_slot_thickness - bracket_inner_thickness, 0, -teal_sport_body_height/2])
   led_strip_holder_bracket();
@@ -54,8 +56,7 @@ rotate([led_strip_tilt, 0, 0]) {
   // Stocklike top cover.
   //teal_stocklike_top_cover(true, led_strip_tilt);
   
-  top_cover_base_bracket();
-  top_cover_horribly_curvy_upper_section(true, led_strip_tilt);
+  top_cover_with_side_bracket_base(false, true, led_strip_tilt);
   
   // Drone body and rotor preview. (Some dimensions are conjectural, based on available images.)
   teal_preview_estimate();

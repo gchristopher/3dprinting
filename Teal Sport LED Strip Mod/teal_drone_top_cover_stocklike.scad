@@ -33,6 +33,7 @@
 
 use <teal_drone_top_cover_plain.scad>
 
+include <teal_drone_top_cover_plain_parameters.scad>
 include <teal_drone_top_cover_stocklike_parameters.scad>
 
 // Infinitesimal value for ensuring manifold shapes and other special uses. 
@@ -146,6 +147,17 @@ module rounded_circle_arc(radius, width, thickness, min_theta, max_theta) {
   }
 }
 
+module area_above_plain_case() {
+  difference() {
+    translate([0, 0, 2*slop])
+    linear_extrude(height = 50)
+    offset(r = 5)
+    import("teal_top_cover_outline.dxf");
+    translate([0, 0, slop])
+    case_outer_volume();
+  }
+}
+
 module fpv_camera_holder_outer_shell() {
   hull() {
     translate([0, fpv_camera_screw_distance, 0])
@@ -215,8 +227,7 @@ module fpv_camera_holder_inner_cutout() {
   }
 }
 
-module fpv_camera_tilt_bracket() {
-  translate([camera_holder_mount_width/2, 0, 0])
+module fpv_camera_tilt_bracket_shape() {
   difference() {
     hull() {
       rotate([0, 90, 0])
@@ -232,28 +243,86 @@ module fpv_camera_tilt_bracket() {
     translate([-slop, 0, 0])
     rounded_circle_arc(fpv_camera_side_screw_distance, 2*camera_holder_screw_hole_r, camera_holder_thickness + 2*slop, tilt_bracket_min_theta, tilt_bracket_max_theta);
   }
+  
+}
+
+module fpv_camera_tilt_bracket() {
+  translate([camera_holder_mount_width/2, 0, 0])
+  fpv_camera_tilt_bracket_shape();
 
   translate([-camera_holder_mount_width/2, 0, 0])
-  difference() {
-    hull() {
-      rotate([0, -90, 0])
-      cylinder(r = camera_holder_screw_holder_r, h = camera_holder_thickness, $fn = camera_holder_circle_fineness);
-      mirror([1, 0, 0])
-      rounded_circle_arc(fpv_camera_side_screw_distance, 2*camera_holder_screw_holder_r, camera_holder_thickness, tilt_bracket_min_theta, tilt_bracket_max_theta);
-    }
-    
-    rotate([0, -90, 0])
-    translate([0, 0, -slop])
-    cylinder(r = camera_holder_screw_hole_r, h = camera_holder_thickness + 2*slop, $fn = camera_holder_circle_fineness);
+  mirror([1, 0, 0])
+  fpv_camera_tilt_bracket_shape();
+}
 
-    mirror([1, 0, 0])
-    translate([-slop, 0, 0])
-    rounded_circle_arc(fpv_camera_side_screw_distance, 2*camera_holder_screw_hole_r, camera_holder_thickness + 2*slop, tilt_bracket_min_theta, tilt_bracket_max_theta);
+fpv_camera_tilt_bracket_under_cowling_boundary_sphere_x_pos = 29.530;
+fpv_camera_tilt_bracket_under_cowling_boundary_sphere_y_pos = -35;
+fpv_camera_tilt_bracket_under_cowling_boundary_sphere_z_pos = 10;
+fpv_camera_tilt_bracket_under_cowling_boundary_sphere_r = 5;
+fpv_camera_tilt_bracket_under_cowling_boundary_sphere_x_scale = 2;
+fpv_camera_tilt_bracket_under_cowling_thickness = case_top_thickness - 0.5;
+fpv_camera_tilt_bracket_under_cowling_cutoff_distance = 9;
+
+
+module fpv_camera_tilt_bracket_under_cowling_shape() {
+  difference() {
+    
+    
+    hull() {
+      translate([camera_holder_mount_width/2, fpv_camera_position_forward, fpv_camara_position_h]) {
+        difference() {
+          fpv_camera_tilt_bracket_shape();
+          //translate([-slop, 6, -12])
+          //cube([camera_holder_thickness + 2*slop, 24, 24]);
+
+          translate([-slop, fpv_camera_tilt_bracket_under_cowling_cutoff_distance, -fpv_camera_side_screw_distance - camera_holder_screw_holder_r - slop])
+          cube([camera_holder_thickness + 2*slop, fpv_camera_side_screw_distance + camera_holder_screw_holder_r + slop, 2*fpv_camera_side_screw_distance + 2*camera_holder_screw_holder_r + 2*slop]);
+        }
+      }
+    
+    
+      translate([fpv_camera_tilt_bracket_under_cowling_boundary_sphere_x_pos, fpv_camera_tilt_bracket_under_cowling_boundary_sphere_y_pos, fpv_camera_tilt_bracket_under_cowling_boundary_sphere_z_pos])
+      scale([fpv_camera_tilt_bracket_under_cowling_boundary_sphere_x_scale, 1, 1])
+      difference() {
+        sphere(r = fpv_camera_tilt_bracket_under_cowling_boundary_sphere_r, $fn = 40);
+        
+        translate([-fpv_camera_tilt_bracket_under_cowling_boundary_sphere_r - slop, 0, -fpv_camera_tilt_bracket_under_cowling_boundary_sphere_r - slop])
+        cube([2*fpv_camera_tilt_bracket_under_cowling_boundary_sphere_r + 2*slop, fpv_camera_tilt_bracket_under_cowling_boundary_sphere_r + slop, 2*fpv_camera_tilt_bracket_under_cowling_boundary_sphere_r + 2*slop]);
+
+        translate([-fpv_camera_tilt_bracket_under_cowling_boundary_sphere_r - slop, -fpv_camera_tilt_bracket_under_cowling_boundary_sphere_r - slop, -fpv_camera_tilt_bracket_under_cowling_boundary_sphere_r - slop])
+        cube([fpv_camera_tilt_bracket_under_cowling_boundary_sphere_r, fpv_camera_tilt_bracket_under_cowling_boundary_sphere_r + 2*slop, 2*fpv_camera_tilt_bracket_under_cowling_boundary_sphere_r + 2*slop]);
+      }
+    }
+    area_above_plain_case();
   }
+
+}
+
+module fpv_camera_tilt_bracket_under_cowling_cutout() {
+  difference() {
+    
+    hull() {
+      //translate([camera_holder_mount_width/2 + camera_holder_thickness - slop, fpv_camera_position_forward, fpv_camara_position_h]) {
+      translate([camera_holder_mount_width/2 - slop, fpv_camera_position_forward, fpv_camara_position_h]) {
+        rotate([0, 90, 0])
+        cylinder(r = camera_holder_screw_holder_r - fpv_camera_tilt_bracket_under_cowling_thickness, h = camera_holder_thickness, $fn = camera_holder_circle_fineness);
+        
+        rounded_circle_arc(fpv_camera_side_screw_distance + 5, 2*camera_holder_screw_holder_r - fpv_camera_tilt_bracket_under_cowling_thickness, camera_holder_thickness, tilt_bracket_min_theta, tilt_bracket_max_theta);
+        
+      }
+      
+      translate([fpv_camera_tilt_bracket_under_cowling_boundary_sphere_x_pos, fpv_camera_tilt_bracket_under_cowling_boundary_sphere_y_pos, fpv_camera_tilt_bracket_under_cowling_boundary_sphere_z_pos])
+      scale([fpv_camera_tilt_bracket_under_cowling_boundary_sphere_x_scale, 1, 1])
+      sphere(r = fpv_camera_tilt_bracket_under_cowling_boundary_sphere_r - fpv_camera_tilt_bracket_under_cowling_thickness, $fn = 40);
+    }
+
+    //area_above_plain_case();
+  }
+  
 }
 
 module fpv_camera_tilt_bracket_cutout() {
-  // ggg TODO: Revisit this shape completely in light of adding a cowling.
+  // ggg TODO: Revisit this shape completely in light of adding a cowling?
   translate([camera_holder_mount_width/2, 0, 0])
   hull() {
     rotate([0, 90, 0])
@@ -273,10 +342,67 @@ module fpv_camera_tilt_bracket_cutout() {
 }
 
 
+module front_vent_cowl_hull(radius1, radius2, y_pre_offset) {
+  hull() {
+    translate([front_vent_cowling_opening_x_pos, front_vent_cowling_opening_y_pos, front_vent_cowling_opening_z_pos])
+    rotate([0, 0, front_vent_cowling_angle])
+    scale([1, 1, front_vent_cowling_y_scale])
+    translate([0, y_pre_offset/100, 0])
+    rotate([-90, 0, 0])
+    cylinder(r = radius1, h = slop, $fn = camera_holder_circle_fineness);
+    
+    translate([front_vent_cowling_end_x_pos, front_vent_cowling_end_y_pos, front_vent_cowling_end_z_pos])
+    rotate([0, 0, front_vent_cowling_angle])
+    scale([1, 1, front_vent_cowling_y_scale])
+    translate([0, y_pre_offset, 0])
+    rotate([-90, 0, 0])
+    cylinder(r = radius2, h = slop, $fn = camera_holder_circle_fineness);
+  }
+}
+
+module front_vent_cowling_outer_shape() {
+  front_vent_cowl_hull(front_vent_cowling_opening_radius, front_vent_cowling_end_radius, 0);
+  mirror([1, 0, 0])  
+  front_vent_cowl_hull(front_vent_cowling_opening_radius, front_vent_cowling_end_radius, 0);
+}
+
+module front_vent_cowling_cutout() {
+  front_vent_cowl_hull(front_vent_cowling_opening_radius - front_vent_cowling_thickness, front_vent_cowling_end_radius- front_vent_cowling_thickness, -front_vent_cowling_thickness);
+  mirror([1, 0, 0])  
+  front_vent_cowl_hull(front_vent_cowling_opening_radius - front_vent_cowling_thickness, front_vent_cowling_end_radius- front_vent_cowling_thickness, -front_vent_cowling_thickness);
+}
+
+module rear_vent_cowl_hull(radius1, radius2, y_pre_offset) {
+  hull() {
+    translate([rear_vent_cowling_opening_x_pos, rear_vent_cowling_opening_y_pos, rear_vent_cowling_opening_z_pos])
+    rotate([0, 0, rear_vent_cowling_angle])
+    scale([1, 1, rear_vent_cowling_y_scale])
+    translate([0, y_pre_offset/100, 0])
+    rotate([-90, 0, 0])
+    cylinder(r = radius1, h = slop, $fn = camera_holder_circle_fineness);
+    
+    translate([rear_vent_cowling_end_x_pos, rear_vent_cowling_end_y_pos, rear_vent_cowling_end_z_pos])
+    rotate([0, 0, rear_vent_cowling_angle])
+    scale([1, 1, rear_vent_cowling_y_scale])
+    translate([0, y_pre_offset, 0])
+    rotate([-90, 0, 0])
+    cylinder(r = radius2, h = slop, $fn = camera_holder_circle_fineness);
+  }
+}
+
+module rear_vent_cowling_outer_shape() {
+  rear_vent_cowl_hull(rear_vent_cowling_opening_radius, rear_vent_cowling_end_radius, 0);
+  mirror([1, 0, 0])  
+  rear_vent_cowl_hull(rear_vent_cowling_opening_radius, rear_vent_cowling_end_radius, 0);
+}
+
+module rear_vent_cowling_cutout() {
+  rear_vent_cowl_hull(rear_vent_cowling_opening_radius - rear_vent_cowling_thickness, rear_vent_cowling_end_radius- rear_vent_cowling_thickness, rear_vent_cowling_thickness);
+  mirror([1, 0, 0])  
+  rear_vent_cowl_hull(rear_vent_cowling_opening_radius - rear_vent_cowling_thickness, rear_vent_cowling_end_radius- rear_vent_cowling_thickness, rear_vent_cowling_thickness);
+}
 
 // ggg TODO: add an under-bracket section below the camera lense.
-
-// ggg TODO: add front air vent cutout and cowling
 
 module sma_connector_bracket() {
   rotate([90 + sma_connector_angle, 0, 0]) {
@@ -310,18 +436,24 @@ module main_cover() {
     fpv_camera_holder_inner_cutout();
   
     translate([0, fpv_camera_position_forward, fpv_camara_position_h]) {
-        fpv_camera_holder_inner_cutout();
-        
-        fpv_camera_tilt_bracket_cutout();
-      }
+      fpv_camera_holder_inner_cutout();
+      fpv_camera_tilt_bracket_cutout();
+    }
     translate([0, sma_connector_position_rear, sma_connector_position_h])
     sma_connector_bracket_cutout();
+    front_vent_cowling_cutout();
+    rear_vent_cowling_cutout();
+    fpv_camera_tilt_bracket_under_cowling_cutout();
+    mirror([1, 0, 0])
+    fpv_camera_tilt_bracket_under_cowling_cutout();
   }
+  
 }
 
 
 module teal_stocklike_top_cover(preview_camera = false, camera_preview_angle = 0) {
   // Apply brackets/cowlings/cutouts to plain case shape.
+  color(preview_color)
   difference() {
     union() {
       // Camera bracket and cowling
@@ -344,6 +476,24 @@ module teal_stocklike_top_cover(preview_camera = false, camera_preview_angle = 0
         sma_connector_bracket_cutout();
       }
 
+      // Vent cowling upper section
+      difference() {
+        front_vent_cowling_outer_shape();
+        front_vent_cowling_cutout();
+        rear_vent_cowling_cutout();
+        translate([0, fpv_camera_position_forward, fpv_camara_position_h])
+        fpv_camera_holder_outer_shell();
+      }
+      
+      difference() {
+        rear_vent_cowling_outer_shape();
+        front_vent_cowling_cutout();
+        rear_vent_cowling_cutout();
+        translate([0, sma_connector_position_rear, sma_connector_position_h])
+        sma_connector_bracket_cutout();
+      }
+
+      
     }
 
     // Do not invade case inner volume with external bracket.
@@ -356,6 +506,7 @@ module teal_stocklike_top_cover(preview_camera = false, camera_preview_angle = 0
   }
  
   translate([0, fpv_camera_position_forward, fpv_camara_position_h]) {
+    color(preview_color)
     fpv_camera_tilt_bracket();
     if(preview_camera) {
       rotate([-camera_preview_angle, 0, 0])
@@ -363,8 +514,26 @@ module teal_stocklike_top_cover(preview_camera = false, camera_preview_angle = 0
     }
   }
 
+  color(preview_color)
+  difference() {
+    fpv_camera_tilt_bracket_under_cowling_shape();
+    fpv_camera_tilt_bracket_under_cowling_cutout();
+    front_vent_cowling_cutout();
+  }
+
+  color(preview_color)
+  difference() {
+    mirror([1, 0, 0])
+    fpv_camera_tilt_bracket_under_cowling_shape();
+    mirror([1, 0, 0])
+    fpv_camera_tilt_bracket_under_cowling_cutout();
+    front_vent_cowling_cutout();
+  }
+
+  color(preview_color)
   main_cover();
 }
 
 
 teal_stocklike_top_cover(true, 0);
+

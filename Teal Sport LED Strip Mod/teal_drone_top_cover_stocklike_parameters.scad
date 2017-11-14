@@ -10,6 +10,8 @@
 // This file is released under the Creative Commons - Attribution license. 
 // http://creativecommons.org/licenses/by/3.0/
 
+preview_color = [0, .7, 1];
+
 // Dimensional variables for a RunCam Swift 2 camera. Mostly for the engineering preview view.
 fpv_camera_case_w = 28.5; // Width of main camera case.
 fpv_camera_case_h = 28.5; // Height of main camera case.
@@ -64,3 +66,31 @@ sma_connector_circle_fineness = 60; // Affects polygon count. Could affect print
 // Position of center of SMA connector hole, relative to the center of the base.
 sma_connector_position_rear = 65; 
 sma_connector_position_h = 16; 
+
+
+front_vent_cowling_opening_radius = 19;
+front_vent_cowling_end_radius = 8;
+front_vent_cowling_y_scale = 0.6;
+front_vent_cowling_angle = 12;
+front_vent_cowling_opening_x_pos = -20;
+front_vent_cowling_opening_y_pos = -31.5;
+front_vent_cowling_opening_z_pos = 10;
+front_vent_cowling_end_x_pos = -25;
+front_vent_cowling_end_y_pos = 15;
+front_vent_cowling_end_z_pos = 4.5;
+front_vent_cowling_thickness = case_top_thickness;
+
+
+rear_vent_cowling_opening_radius = 20;
+rear_vent_cowling_end_radius = 9;
+rear_vent_cowling_y_scale = 0.45;
+rear_vent_cowling_angle = 20;
+rear_vent_cowling_opening_x_pos = -18;
+rear_vent_cowling_opening_y_pos = 60;
+rear_vent_cowling_opening_z_pos = 7;
+rear_vent_cowling_end_x_pos = -20;
+rear_vent_cowling_end_y_pos = -10;
+rear_vent_cowling_end_z_pos = 3.5;
+rear_vent_cowling_thickness = case_top_thickness;
+
+

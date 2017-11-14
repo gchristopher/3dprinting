@@ -10,6 +10,8 @@
 // 30 LEDs: 20.8cm
 // 32 LEDs: 22.2cm
 
+preview_color = [0, .7, 1];
+
 led_strip_width = 14; // Including weather stripping
 led_strip_thickness = 4; // Including weather stripping
 led_strip_length = 208; 

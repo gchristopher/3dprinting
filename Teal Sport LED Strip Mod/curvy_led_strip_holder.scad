@@ -224,114 +224,115 @@ module curvy_led_strip_holder(preview_leds = true, manually_generate_supports = 
   }
   
   echo("Length of center+curved section: ", perim_distance + led_holder_straight_center_length);
-  
-  translate([led_strip_thickness/2 + led_holder_back_thickness - slop, 0, 0]) {
-    rotate([0, 90, 0])
-    difference() {
-      cylinder(r = base_post_r, h = base_post_length, $fn = 20);
-      
-      translate([0, 0, base_post_notch_d])
+  color(preview_color) {
+    translate([led_strip_thickness/2 + led_holder_back_thickness - slop, 0, 0]) {
+      rotate([0, 90, 0])
       difference() {
-        cylinder(r = base_post_r + 1, h = base_post_notch_w, $fn = 20);
-        translate([0, 0, -slop])
-        cylinder(r = base_post_notch_r, h = base_post_notch_w + 2*slop, $fn = 20);
-      }
-    }
-    
-    // Angle adjustment_arm:
-    translate([base_post_length - angle_adjustment_arm_thickness, -angle_adjustment_arm_l + angle_adjustment_arm_w/2, -angle_adjustment_arm_w/2]) {
-      difference() {
-        union() {
-          cube([angle_adjustment_arm_thickness, angle_adjustment_arm_l - angle_adjustment_arm_w/2, angle_adjustment_arm_w]);
-          translate([0, 0, angle_adjustment_arm_w/2])
-          rotate([0, 90, 0])
-          cylinder(r = angle_adjustment_arm_w/2, h = angle_adjustment_arm_thickness, $fn = 20);
+        cylinder(r = base_post_r, h = base_post_length, $fn = 20);
+        
+        translate([0, 0, base_post_notch_d])
+        difference() {
+          cylinder(r = base_post_r + 1, h = base_post_notch_w, $fn = 20);
+          translate([0, 0, -slop])
+          cylinder(r = base_post_notch_r, h = base_post_notch_w + 2*slop, $fn = 20);
         }
-        translate([-slop, 0, angle_adjustment_arm_w/2])
-        rotate([0, 90, 0])
-        cylinder(r = angle_adjustment_arm_screw_hole_r, h = angle_adjustment_arm_thickness + 2*slop, $fn = 20);
       }
-    }
-    
-    if(manually_generate_supports) {
-      for(x = [base_post_notch_d - 0.4, base_post_notch_d + base_post_notch_w, base_post_length - 0.4]) {
-        translate([x, 0, -angle_adjustment_arm_w/2])
-        cube([0.4, led_strip_width/2 + led_holder_side_thickness, angle_adjustment_arm_w]);
+      
+      // Angle adjustment_arm:
+      translate([base_post_length - angle_adjustment_arm_thickness, -angle_adjustment_arm_l + angle_adjustment_arm_w/2, -angle_adjustment_arm_w/2]) {
+        difference() {
+          union() {
+            cube([angle_adjustment_arm_thickness, angle_adjustment_arm_l - angle_adjustment_arm_w/2, angle_adjustment_arm_w]);
+            translate([0, 0, angle_adjustment_arm_w/2])
+            rotate([0, 90, 0])
+            cylinder(r = angle_adjustment_arm_w/2, h = angle_adjustment_arm_thickness, $fn = 20);
+          }
+          translate([-slop, 0, angle_adjustment_arm_w/2])
+          rotate([0, 90, 0])
+          cylinder(r = angle_adjustment_arm_screw_hole_r, h = angle_adjustment_arm_thickness + 2*slop, $fn = 20);
+        }
       }
-    }
-  }
-  
-  // Curvy LED strip holder:
-  rotate([-90, 0, 0])
-  translate([curvy_section_r, 0, 0]) {
-
-    translate([0, -led_holder_straight_center_length/2 + slop, 0])
-    rotate_extrude(angle = curvy_section_theta, $fn = rotational_fineness)
-    translate([-curvy_section_r, 0, 0])
-    led_holder_cross_section();
-
-    translate([0, led_holder_straight_center_length/2 - slop, 0])
-    rotate([0, 0, -curvy_section_theta])
-    rotate_extrude(angle = curvy_section_theta, $fn = rotational_fineness)
-    translate([-curvy_section_r, 0, 0])
-    led_holder_cross_section();
-    
-    translate([-2*d_x - slop, 2*d_y + led_holder_straight_center_length/2  - 2*slop, 0])
-    rotate([0, 0, -curvy_section_theta])
-    rotate_extrude(angle = curvy_section_theta, $fn = rotational_fineness)
-    translate([curvy_section_r, 0, 0])
-    led_holder_cross_section();
-    
-    translate([-2*d_x - slop, -2*d_y - led_holder_straight_center_length/2 + 2*slop, 0])
-    rotate_extrude(angle = curvy_section_theta, $fn = rotational_fineness)
-    translate([curvy_section_r, 0, 0])
-    led_holder_cross_section();
-    
-    if(manually_generate_supports) {
-      curved_section_manual_print_supports();
-    }
-  }
-  
-  // Center straight section
-  translate([0, 0, -led_holder_straight_center_length/2]) {
-    linear_extrude(height = led_holder_straight_center_length)
-    led_holder_cross_section();
-  
-    if(manually_generate_supports) {
-      straight_section_manual_print_supports(led_holder_straight_center_length);
-    }
-  }
-  
-  // Add straight end sections only if needed:
-  end_cap_dz = (led_holder_length - perim_distance - led_holder_straight_center_length) / 2;
-  if(end_cap_dz > 0) {
-    translate([2*curvy_section_r - 2*d_x, 0, 2*d_y + led_holder_straight_center_length/2 - 3*slop]) {
-      linear_extrude(height = end_cap_dz)
-      led_holder_cross_section();
-  
+      
       if(manually_generate_supports) {
-        straight_section_manual_print_supports(end_cap_dz);
+        for(x = [base_post_notch_d - 0.4, base_post_notch_d + base_post_notch_w, base_post_length - 0.4]) {
+          translate([x, 0, -angle_adjustment_arm_w/2])
+          cube([0.4, led_strip_width/2 + led_holder_side_thickness, angle_adjustment_arm_w]);
+        }
       }
     }
-
-    translate([2*curvy_section_r - 2*d_x, 0, -2*d_y - end_cap_dz - led_holder_straight_center_length/2 + 3*slop]) {
-      linear_extrude(height = end_cap_dz)
+    
+    // Curvy LED strip holder:
+    rotate([-90, 0, 0])
+    translate([curvy_section_r, 0, 0]) {
+    
+      translate([0, -led_holder_straight_center_length/2 + slop, 0])
+      rotate_extrude(angle = curvy_section_theta, $fn = rotational_fineness)
+      translate([-curvy_section_r, 0, 0])
       led_holder_cross_section();
-
+    
+      translate([0, led_holder_straight_center_length/2 - slop, 0])
+      rotate([0, 0, -curvy_section_theta])
+      rotate_extrude(angle = curvy_section_theta, $fn = rotational_fineness)
+      translate([-curvy_section_r, 0, 0])
+      led_holder_cross_section();
+      
+      translate([-2*d_x - slop, 2*d_y + led_holder_straight_center_length/2  - 2*slop, 0])
+      rotate([0, 0, -curvy_section_theta])
+      rotate_extrude(angle = curvy_section_theta, $fn = rotational_fineness)
+      translate([curvy_section_r, 0, 0])
+      led_holder_cross_section();
+      
+      translate([-2*d_x - slop, -2*d_y - led_holder_straight_center_length/2 + 2*slop, 0])
+      rotate_extrude(angle = curvy_section_theta, $fn = rotational_fineness)
+      translate([curvy_section_r, 0, 0])
+      led_holder_cross_section();
+      
       if(manually_generate_supports) {
-        straight_section_manual_print_supports(end_cap_dz);
+        curved_section_manual_print_supports();
       }
     }
+    
+    // Center straight section
+    translate([0, 0, -led_holder_straight_center_length/2]) {
+      linear_extrude(height = led_holder_straight_center_length)
+      led_holder_cross_section();
+    
+      if(manually_generate_supports) {
+        straight_section_manual_print_supports(led_holder_straight_center_length);
+      }
+    }
+    
+    // Add straight end sections only if needed:
+    end_cap_dz = (led_holder_length - perim_distance - led_holder_straight_center_length) / 2;
+    if(end_cap_dz > 0) {
+      translate([2*curvy_section_r - 2*d_x, 0, 2*d_y + led_holder_straight_center_length/2 - 3*slop]) {
+        linear_extrude(height = end_cap_dz)
+        led_holder_cross_section();
+    
+        if(manually_generate_supports) {
+          straight_section_manual_print_supports(end_cap_dz);
+        }
+      }
+    
+      translate([2*curvy_section_r - 2*d_x, 0, -2*d_y - end_cap_dz - led_holder_straight_center_length/2 + 3*slop]) {
+        linear_extrude(height = end_cap_dz)
+        led_holder_cross_section();
+    
+        if(manually_generate_supports) {
+          straight_section_manual_print_supports(end_cap_dz);
+        }
+      }
+    }
+    
+    end_cap_pos = end_cap_dz;
+    if(end_cap_pos < 0) {
+      end_cap_pos = 0;
+    }
+    translate([2*curvy_section_r - 2*d_x, 0, -2*d_y - end_cap_pos - led_holder_bottom_cap_thickness - led_holder_straight_center_length/2 + 3*slop])
+    linear_extrude(height = led_holder_bottom_cap_thickness)
+    hull()
+    led_holder_cross_section();
   }
-
-  end_cap_pos = end_cap_dz;
-  if(end_cap_pos < 0) {
-    end_cap_pos = 0;
-  }
-  translate([2*curvy_section_r - 2*d_x, 0, -2*d_y - end_cap_pos - led_holder_bottom_cap_thickness - led_holder_straight_center_length/2 + 3*slop])
-  linear_extrude(height = led_holder_bottom_cap_thickness)
-  hull()
-  led_holder_cross_section();
 }
 
 // Place the curvy LED strip holder for printing. 
