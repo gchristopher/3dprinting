@@ -167,3 +167,7 @@ module post_preview() {
 %post_preview();
 
 led_strip_holder_bracket();
+
+translate([-8, 0, 0])
+mirror([1, 0, 0])
+led_strip_holder_bracket();

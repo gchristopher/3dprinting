@@ -54,12 +54,6 @@ module side_bracket_cutout() {
   cube([side_bracket_nut_cutout_length, 2*side_bracket_nut_cutout_radius, bracket_inner_height_over_lip - bracket_mounting_screw_height + slop]);
 }
 
-wire_cutout_x = -38;
-wire_cutout_y = 0;
-wire_cutout_r = 2.5;
-wire_cutout_x_scale = 0.8;
-wire_cutout_angle = 35;
-
 module wire_cutout() {
   translate([wire_cutout_x, wire_cutout_y, 0])
   rotate([0, -wire_cutout_angle, 0])

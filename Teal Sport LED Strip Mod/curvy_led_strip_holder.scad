@@ -173,7 +173,6 @@ rotational_fineness = 80;
 module curved_section_manual_print_supports() {
   strip_theta = 0.4 / curvy_section_r / 2 / PI * 360;
   echo(strip_theta);
-  //manual_support_spacing
   
   for(x = [manual_support_spacing/2 : manual_support_spacing : perim_distance/4]) {
     rot_theta = x / curvy_section_r / 2 / PI * 360;
