@@ -70,6 +70,7 @@ module teal_preview_estimate() {
   color(body_color)
   translate([0, 0, -teal_sport_body_height])
   linear_extrude(height = teal_sport_body_height)
+  offset(r = slop)
   import("teal_top_cover_outline.dxf");
 
   // Battery estimate
