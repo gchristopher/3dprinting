@@ -22,14 +22,22 @@
 // Module summary:
 //
 // fpv_camera_shape() : preview the FPV camera.
+// area_above_plain_case() : The volume above and sourrouding a plain case.
 // fpv_camera_holder_outer_shell() : Camera Holder and cowling.
 // fpv_camera_holder_inner_cutout() : Cutout for camera holder and cowling.
 // fpv_camera_tilt_bracket() : Camera holder and tilt adjustment bracket.
-// fpv_camera_tilt_bracket_cutout() : Clearance cutout for access to tilt bracket screws.
+// fpv_camera_tilt_bracket_under_cowling_cutout() : Cutout for the cowling under the tilt bracket.
+// fpv_camera_tilt_bracket_cutout() : Cutout for the space immediately adjacent to the tilt bracket.
+// front_vent_cowling_outer_shape() : External volume of the front vent cowling.
+// front_vent_cowling_cutout() : Internal cutout for the front vent cowling.
+// rear_vent_cowling_outer_shape() : External volume for the rear vent cowling. 
+// rear_vent_cowling_cutout() : Internal cutout for the rear vent cowling.
 // sma_connector_bracket() : SMA connector bracket and cowling.
 // sma_connector_bracket_cutout() : Cutout for the SMA connector bracket and cowling.
 // main_cover() : The plain cover minus the cutots.
 // teal_stocklike_top_cover(preview_camera = false, camera_preview_angle = 0) : Complete stocklike cover with optional camera preview.
+
+// TODO: add an under-bracket section below the camera lense?
 
 use <teal_drone_top_cover_plain.scad>
 
@@ -220,7 +228,7 @@ module fpv_camera_holder_inner_cutout() {
 
   translate([-camera_holder_lense_cutout_w/2 + camera_holder_lense_cutout_bevel_r, fpv_camera_screw_distance - camera_holder_lense_cutout_d + slop, -camera_holder_lense_cutout_w/2 + camera_holder_lense_cutout_bevel_r])
   rotate([90, 0, 0])
-  linear_extrude(height = 30) // Long enough to clear the case, not parameterized.
+  linear_extrude(height = 50) // Long enough to clear the case, not parameterized.
   minkowski() {
     square([camera_holder_lense_cutout_w - 2*camera_holder_lense_cutout_bevel_r, camera_holder_lense_cutout_w - 2*camera_holder_lense_cutout_bevel_r]);
     circle(r = camera_holder_lense_cutout_bevel_r, $fn = 20);
@@ -255,25 +263,12 @@ module fpv_camera_tilt_bracket() {
   fpv_camera_tilt_bracket_shape();
 }
 
-fpv_camera_tilt_bracket_under_cowling_boundary_sphere_x_pos = 29.530;
-fpv_camera_tilt_bracket_under_cowling_boundary_sphere_y_pos = -35;
-fpv_camera_tilt_bracket_under_cowling_boundary_sphere_z_pos = 10;
-fpv_camera_tilt_bracket_under_cowling_boundary_sphere_r = 5;
-fpv_camera_tilt_bracket_under_cowling_boundary_sphere_x_scale = 2;
-fpv_camera_tilt_bracket_under_cowling_thickness = case_top_thickness - 0.5;
-fpv_camera_tilt_bracket_under_cowling_cutoff_distance = 9;
-
-
 module fpv_camera_tilt_bracket_under_cowling_shape() {
   difference() {
-    
-    
     hull() {
       translate([camera_holder_mount_width/2, fpv_camera_position_forward, fpv_camara_position_h]) {
         difference() {
           fpv_camera_tilt_bracket_shape();
-          //translate([-slop, 6, -12])
-          //cube([camera_holder_thickness + 2*slop, 24, 24]);
 
           translate([-slop, fpv_camera_tilt_bracket_under_cowling_cutoff_distance, -fpv_camera_side_screw_distance - camera_holder_screw_holder_r - slop])
           cube([camera_holder_thickness + 2*slop, fpv_camera_side_screw_distance + camera_holder_screw_holder_r + slop, 2*fpv_camera_side_screw_distance + 2*camera_holder_screw_holder_r + 2*slop]);
@@ -300,9 +295,7 @@ module fpv_camera_tilt_bracket_under_cowling_shape() {
 
 module fpv_camera_tilt_bracket_under_cowling_cutout() {
   difference() {
-    
     hull() {
-      //translate([camera_holder_mount_width/2 + camera_holder_thickness - slop, fpv_camera_position_forward, fpv_camara_position_h]) {
       translate([camera_holder_mount_width/2 - slop, fpv_camera_position_forward, fpv_camara_position_h]) {
         rotate([0, 90, 0])
         cylinder(r = camera_holder_screw_holder_r - fpv_camera_tilt_bracket_under_cowling_thickness, h = camera_holder_thickness, $fn = camera_holder_circle_fineness);
@@ -315,14 +308,10 @@ module fpv_camera_tilt_bracket_under_cowling_cutout() {
       scale([fpv_camera_tilt_bracket_under_cowling_boundary_sphere_x_scale, 1, 1])
       sphere(r = fpv_camera_tilt_bracket_under_cowling_boundary_sphere_r - fpv_camera_tilt_bracket_under_cowling_thickness, $fn = 40);
     }
-
-    //area_above_plain_case();
   }
-  
 }
 
 module fpv_camera_tilt_bracket_cutout() {
-  // ggg TODO: Revisit this shape completely in light of adding a cowling?
   translate([camera_holder_mount_width/2, 0, 0])
   hull() {
     rotate([0, 90, 0])
@@ -402,8 +391,6 @@ module rear_vent_cowling_cutout() {
   rear_vent_cowl_hull(rear_vent_cowling_opening_radius - rear_vent_cowling_thickness, rear_vent_cowling_end_radius- rear_vent_cowling_thickness, rear_vent_cowling_thickness);
 }
 
-// ggg TODO: add an under-bracket section below the camera lense.
-
 module sma_connector_bracket() {
   rotate([90 + sma_connector_angle, 0, 0]) {
     cylinder(r = sma_connector_cowling_inner_r + sma_connector_cowling_thickness, h = sma_connector_cowling_length, $fn = sma_connector_circle_fineness);
@@ -435,14 +422,15 @@ module main_cover() {
     translate([0, fpv_camera_position_forward, fpv_camara_position_h])
     fpv_camera_holder_inner_cutout();
   
-    translate([0, fpv_camera_position_forward, fpv_camara_position_h]) {
-      fpv_camera_holder_inner_cutout();
-      fpv_camera_tilt_bracket_cutout();
-    }
+    translate([0, fpv_camera_position_forward, fpv_camara_position_h])
+    fpv_camera_tilt_bracket_cutout();
+
     translate([0, sma_connector_position_rear, sma_connector_position_h])
     sma_connector_bracket_cutout();
+
     front_vent_cowling_cutout();
     rear_vent_cowling_cutout();
+
     fpv_camera_tilt_bracket_under_cowling_cutout();
     mirror([1, 0, 0])
     fpv_camera_tilt_bracket_under_cowling_cutout();

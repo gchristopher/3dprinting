@@ -8,6 +8,13 @@
 // This file is released under the Creative Commons - Attribution license. 
 // http://creativecommons.org/licenses/by/3.0/
 
+// Module Summary: 
+//
+// side_bracket_shape() : Screw bracket to attach side holder.
+// side_bracket_cutout() : Cutout for nut in screw bracket.
+// wire_cutout() : Cutout to allow wires to enter the case.
+// top_cover_with_side_bracket() : The above parts applied to the stocklike case.
+
 use <teal_drone_top_cover_stocklike.scad>
 use <led_strip_holder_bracket.scad>
 
@@ -63,7 +70,9 @@ module wire_cutout() {
 }
 
 
-module top_cover_with_side_bracket_base(cut_down_to_bracket = true, preview_camera = false, camera_preview_angle = 0) {
+module top_cover_with_side_bracket(preview_camera = false, camera_preview_angle = 0) {
+  cut_down_to_bracket = false; 
+  
   difference() {
     union() {
       if(cut_down_to_bracket) {
@@ -102,32 +111,13 @@ module top_cover_with_side_bracket_base(cut_down_to_bracket = true, preview_came
   }
 }
 
-module top_cover_horribly_curvy_upper_section(preview_camera = false, camera_preview_angle = 0) {
-  intersection() {
-    teal_stocklike_top_cover(preview_camera, camera_preview_angle);
-    
-    translate([-80, -100, mounting_bracket_h+slop])
-    cube([160, 200, 30]);
-  }
-}
+top_cover_with_side_bracket(true, 0);
 
+// Preview side mounting brackets.
+%translate([-bracket_distance_from_teal_body - base_post_notch_w - bracket_angle_arm_slot_thickness - bracket_inner_thickness, 0, -teal_sport_body_height/2])
+led_strip_holder_bracket();
 
+%mirror([1, 0, 0])
+translate([-bracket_distance_from_teal_body - base_post_notch_w - bracket_angle_arm_slot_thickness - bracket_inner_thickness, 0, -teal_sport_body_height/2])
+led_strip_holder_bracket();
 
-top_cover_with_side_bracket_base(false, true, 0);
-
-//difference() {
-//rotate([0, 90, 0])
-//translate([0, 0, -mounting_bracket_h])
-//top_cover_horribly_curvy_upper_section(true, 0);
-
-  // Side mounting brackets.
-  %translate([-bracket_distance_from_teal_body - base_post_notch_w - bracket_angle_arm_slot_thickness - bracket_inner_thickness, 0, -teal_sport_body_height/2])
-  led_strip_holder_bracket();
-  
-  %mirror([1, 0, 0])
-  translate([-bracket_distance_from_teal_body - base_post_notch_w - bracket_angle_arm_slot_thickness - bracket_inner_thickness, 0, -teal_sport_body_height/2])
-  led_strip_holder_bracket();
-
-    //translate([-80, -100, -80])
-    //cube([160, 200, 80]);
-//}

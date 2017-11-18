@@ -46,6 +46,16 @@ camera_holder_lense_cutout_w = 20; // Width of the cutout in the case for the fr
 camera_holder_lense_cutout_bevel_r = 5; // Bevel radius for the camera lense cutout.
 camera_holder_lense_cutout_d = 20; // Affects the cutout shape. Measured from the base of the camera at 0 tilt. 
 
+// Variables describing the shape of the under-cowling for the FPV camera tilt bracket for screw access.
+// Position, size, and scaling of sphere that forms one end of the hull. (The other end is the tilt bracket.)
+fpv_camera_tilt_bracket_under_cowling_boundary_sphere_x_pos = 29.530; 
+fpv_camera_tilt_bracket_under_cowling_boundary_sphere_y_pos = -35;
+fpv_camera_tilt_bracket_under_cowling_boundary_sphere_z_pos = 10;
+fpv_camera_tilt_bracket_under_cowling_boundary_sphere_r = 5;
+fpv_camera_tilt_bracket_under_cowling_boundary_sphere_x_scale = 2;
+fpv_camera_tilt_bracket_under_cowling_thickness = case_top_thickness - 0.5;
+fpv_camera_tilt_bracket_under_cowling_cutoff_distance = 9; // Offset of a straight-edge cutoff to keep the cowling from extending too far back into the interior volume.
+
 tilt_bracket_min_theta = -35; // Minimum angle (highest point) of the tilt adjustment slider. 
 // Min Theta determines lowest angle camera can point. The RunCam Swift 2 needs at least -27 degrees to point stright forward.
 tilt_bracket_max_theta = 20; // Maximum angle (lowest point) of the tilt adjustment slider. 
@@ -67,7 +77,7 @@ sma_connector_circle_fineness = 60; // Affects polygon count. Could affect print
 sma_connector_position_rear = 65; 
 sma_connector_position_h = 16; 
 
-
+// Front and rear vent cowlings are both conical sections defined by ellipses (made by scaling a circle) at each end. 
 front_vent_cowling_opening_radius = 19;
 front_vent_cowling_end_radius = 8;
 front_vent_cowling_y_scale = 0.6;
@@ -79,7 +89,6 @@ front_vent_cowling_end_x_pos = -25;
 front_vent_cowling_end_y_pos = 15;
 front_vent_cowling_end_z_pos = 4.5;
 front_vent_cowling_thickness = case_top_thickness;
-
 
 rear_vent_cowling_opening_radius = 20;
 rear_vent_cowling_end_radius = 9;

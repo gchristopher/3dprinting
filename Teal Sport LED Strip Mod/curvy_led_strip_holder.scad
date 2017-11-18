@@ -54,7 +54,6 @@ module led_holder_cross_section() {
 
 module led_holder_print_support_cross_section() {
   translate([-led_holder_front_thickness - led_strip_thickness/2, -led_strip_width/2 + led_holder_clip_length - slop])
-  //translate([-led_holder_front_thickness - led_strip_thickness/2, 0])
   square([led_holder_front_thickness, led_strip_width - 2*led_holder_clip_length + 2*slop]);
 }
 
@@ -341,11 +340,22 @@ curvy_led_strip_holder(true, generate_supports_from_this_file);
 
 // Long skinny, tallish objects can benefit greatly from stick pads on the ends.
 if(generate_supports_from_this_file) {
-  translate([16, -100, -led_strip_width/2 - led_holder_side_thickness])
-  cylinder(r = 8, h = 0.2);
+  translate([-35, 0, 0]) {
+    translate([16, -100, -led_strip_width/2 - led_holder_side_thickness])
+    cylinder(r = 8, h = 0.2);
+    
+    translate([16, 100, -led_strip_width/2 - led_holder_side_thickness])
+    cylinder(r = 8, h = 0.2);
+  }
 
-  translate([16, 100, -led_strip_width/2 - led_holder_side_thickness])
-  cylinder(r = 8, h = 0.2);
+  mirror([1, 0, 0])
+  translate([-35, 0, 0]) {
+    translate([16, -100, -led_strip_width/2 - led_holder_side_thickness])
+    cylinder(r = 8, h = 0.2);
+    
+    translate([16, 100, -led_strip_width/2 - led_holder_side_thickness])
+    cylinder(r = 8, h = 0.2);
+  }
 }
 
 mirror([1, 0, 0])
